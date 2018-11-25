@@ -1,12 +1,13 @@
-
-from sklearn import datasets
 from sklearn.cluster import KMeans
-import sklearn.metrics as sm
+import sklearn.metrics as metrics
 import pandas as pd
 import numpy as np
 
 l1 = [0,1,2]
 
+#this method ensures the uniform coloring of points
+#by changing any l2-[2,0,1] - [0,2,1]
+#into [0,1,2]
 def rename(s):
 	l2 = []
 	for i in s:
@@ -16,17 +17,31 @@ def rename(s):
 	for i in range(len(s)):
 		pos = l2.index(s[i])
 		s[i] = l1[pos]
-	#print("values",s[i])	
+		#print("values",pos,s[i])
 	return s
-	
-# import some data to play with
+
+from sklearn import datasets
+# import dataset  
 iris = datasets.load_iris()
 """
 The rows being the samples and the columns being: Sepal Length, Sepal Width, Petal Length and Petal Width.
 """
-print("\n IRIS DATA :",iris.data);
+#print("\n IRIS DATA :",iris.data);
+"""
+[[5.1 3.5 1.4 0.2]
+ [4.9 3.  1.4 0.2]
+         ...
+ [4.7 3.2 1.3 0.2]]
+"""
 #print("\n IRIS FEATURES :\n",iris.feature_names) 
-print("\n IRIS TARGET  :\n",iris.target) 
+#print("\n IRIS TARGET  :\n",iris.target)
+"""
+[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+ 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2
+ 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+ 2 2]
+"""
 #print("\n IRIS TARGET NAMES:\n",iris.target_names)
 
 
@@ -34,18 +49,15 @@ print("\n IRIS TARGET  :\n",iris.target)
 X = pd.DataFrame(iris.data)
 X.columns = ['Sepal_Length','Sepal_Width','Petal_Length','Petal_Width']
 
-#print(X.columns) #print("X:",x)
-#print("Y:",y)
+#targets DataFrame obj
 y = pd.DataFrame(iris.target)
 y.columns = ['Targets']
 
 from matplotlib import pyplot
 # Set the size of the plot
 pyplot.figure(figsize=(14,7))
-
 # Create a colormap
 colormap = np.array(['red', 'lime', 'black'])
-
 # Plot Sepal
 """
 the subplot will take the index position on a grid with nrows rows and ncols columns.
@@ -63,8 +75,7 @@ pyplot.show()
 print("Actual Target is:\n", iris.target)
 
 # K Means Cluster
-model = KMeans(n_clusters=3)
-model.fit(X)
+model = KMeans(n_clusters=3).fit(X)
 
 # Set the size of the plot
 pyplot.figure(figsize=(14,7))
@@ -85,23 +96,20 @@ pyplot.show()
 
 km = rename(model.labels_)
 print("\nWhat KMeans thought: \n", km)
-print("Accuracy of KMeans is ",sm.accuracy_score(y, km))
-print("Confusion Matrix for KMeans is \n",sm.confusion_matrix(y, km))
+print("Accuracy of KMeans is ",metrics.accuracy_score(y, km))
+print("Confusion Matrix for KMeans is \n",metrics.confusion_matrix(y, km))
 
-from sklearn import preprocessing#several common utility functions and transformer classes to change
 
-scaler = preprocessing.StandardScaler()#raw feature vectors into a representation that is more suitable for the
-                                       #downstream estimators.
-scaler.fit(X)
-xsa = scaler.transform(X)#scale:provides a quick and easy way to perform this operation on a single array-like dataset:
+#-----------------------------------------------
+#---------EM ALgorithm--------------------------
+from sklearn import preprocessing
+xsa = preprocessing.StandardScaler().fit(X).transform(X)
 xs = pd.DataFrame(xsa, columns = X.columns)
 print("\nsample",xs.sample(5))
 
 from sklearn.mixture import GaussianMixture  #Gaussian mixture model probability distribution.
-gmm = GaussianMixture(n_components=3)
-gmm.fit(xs)
+y_cluster_gmm  = GaussianMixture(n_components=3).fit(xs).predict(xs)
 
-y_cluster_gmm = gmm.predict(xs)
 
 pyplot.subplot(1, 2, 1)
 pyplot.scatter(X.Petal_Length, X.Petal_Width, c=colormap[y_cluster_gmm], s=40)
@@ -110,5 +118,5 @@ pyplot.show()
 
 em = rename(y_cluster_gmm)
 print("\nWhat EM thought: \n", em)
-print("Accuracy of EM is ",sm.accuracy_score(y, em))
-print("Confusion Matrix for EM is \n", sm.confusion_matrix(y, em))
+print("Accuracy of EM is ",metrics.accuracy_score(y, em))
+print("Confusion Matrix for EM is \n", metrics.confusion_matrix(y, em))
