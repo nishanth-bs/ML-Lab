@@ -6,7 +6,7 @@ training_data =fetch_20newsgroups(subset='train',categories=categories,shuffle=T
 testing_data = fetch_20newsgroups(subset='test',categories=categories,shuffle=True)
 
 """ printing one email thread """
-print("\n ".join(training_data.data[0].split("\n")))
+print(training_data.data[0])
 print("tt",training_data.target[0])
 
 from sklearn.feature_extraction.text import CountVectorizer,TfidfTransformer
@@ -22,7 +22,7 @@ from sklearn import metrics
 #----------------------------------------------------
 multinomial_nb = MultinomialNB()
 multinomial_nb.fit(training_tfidf, training_data.target)
-#----------------------------------------------------
+
 testing_tf = countVectorizer.transform(testing_data.data)
 testing_tfidf = tfidf_transformer.transform(testing_tf)
 predicted = multinomial_nb.predict(testing_tfidf)
