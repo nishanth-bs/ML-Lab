@@ -8,7 +8,7 @@ for i in range(len(iris_dataset.target_names)):
 
 from sklearn.model_selection import train_test_split
 #Split arrays or matrices into random train and test subsets
-X_train, X_test, y_train, y_test = train_test_split(iris_dataset["data"], iris_dataset["target"], random_state=0)
+X_train, X_test, y_train, y_test = train_test_split(iris_dataset.data, iris_dataset.target, random_state=0)
 
 print("\n Target :\n",iris_dataset["target"])
 print("\n X TRAIN \n", X_train)
