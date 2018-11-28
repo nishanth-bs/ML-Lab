@@ -1,16 +1,19 @@
-import sklearn as skl
 import pandas as pd
-import numpy as np
 from urllib.request import urlopen
-import urllib
 import pgmpy
 #get data
+"""
+from bs4 import BeautifulSoup
+nn = 'http://archive.ics.uci.edu/ml/machine-learning-databases/heart-disease/heart-disease.names'
+s  = BeautifulSoup(urlopen(nn).read() , 'html.parser')
+print(s.prettify())
+"""
 Cleveland_data_URL = 'http://archive.ics.uci.edu/ml/machine-learning-databases/heart-disease/processed.hungarian.data'
 names = ['age', 'sex', 'cp', 'trestbps', 'chol', 'fbs', 'restecg', 'thalach', 'exang', 'oldpeak', 'slope', 'ca', 'thal', 'heartdisease']
 heartDisease = pd.read_csv(urlopen(Cleveland_data_URL), names = names) 
 
 from pgmpy.models import BayesianModel
-from pgmpy.estimators import MaximumLikelihoodEstimator, BayesianEstimator
+from pgmpy.estimators import MaximumLikelihoodEstimator
 model = BayesianModel([('age', 'trestbps'), ('age', 'fbs'), ('sex', 'trestbps'), ('sex', 'trestbps'), 
                        ('exang', 'trestbps'),('trestbps','heartdisease'),('fbs','heartdisease'),
                       ('heartdisease','restecg'),('heartdisease','thalach'),('heartdisease','chol')])
