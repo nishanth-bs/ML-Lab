@@ -19,25 +19,25 @@ outputlayer_weights=np.random.uniform(size= (hiddenlayerNeurons,
                                              oplayerNeurons ))  
 outputlayer_bias = np.random.uniform(size=(1, oplayerNeurons)) 
 for i in range(epoch):
-    hiddenlayer_input = np.dot(ipData, hiddenlayerWt) 
-    hiddenlayer_input = hiddenlayer_input + hiddenlayer_bias 
-    hiddenlayer_output = sigmoid(hiddenlayer_input) 
+    hiddenlayerIp = np.dot(ipData, hiddenlayerWt) 
+    hiddenlayerIp = hiddenlayerIp + hiddenlayer_bias 
+    hiddenlayerOp = sigmoid(hiddenlayerIp) 
     
-    outputlayer_input = np.dot(hiddenlayer_output, outputlayer_weights) 
-    outputlayer_input = outputlayer_input + outputlayer_bias
-    outputlayer_output=sigmoid(outputlayer_input)
+    outputlayerIp = np.dot(hiddenlayerOp, outputlayer_weights) 
+    outputlayerIp = outputlayerIp + outputlayer_bias
+    outputlayerOp=sigmoid(outputlayerIp)
      
-    outputlayer_error=expectedOp-outputlayer_output 
-    outputlayer_gradient=derivative_sigmoid(outputlayer_output) 
-    outputlayer_error_correction = outputlayer_error* outputlayer_gradient
+    outputlayerErr=expectedOp-outputlayerOp 
+    outputlayerGradient=derivative_sigmoid(outputlayerOp) 
+    outputlayerErr_correction = outputlayerErr* outputlayerGradient
    
-    hiddenlayer_error = outputlayer_error_correction.dot (outputlayer_weights. T) 
-    hiddenlayer_gradient=derivative_sigmoid(hiddenlayer_output) 
+    hiddenlayer_error = outputlayerErr_correction.dot (outputlayer_weights. T) 
+    hiddenlayer_gradient=derivative_sigmoid(hiddenlayerOp) 
     hiddenlayer_error_correction=hiddenlayer_error*hiddenlayer_gradient
     
-    outputlayer_weights += hiddenlayer_output.T.dot(outputlayer_error_correction) * learning_rate 
+    outputlayer_weights += hiddenlayerOp.T.dot(outputlayerErr_correction) * learning_rate 
     hiddenlayerWt += ipData.T.dot(hiddenlayer_error_correction)*learning_rate
     
 print("Input : ", ipData)
 print("Expected Output :", expectedOp)
-print("actual output: ",outputlayer_output)
+print("actual output: ",outputlayerOp)
