@@ -4,12 +4,10 @@ hypo=['%','%','%','%','%','%']
 with open('Training_examples.csv') as csv_file:
     readcsv = csv.reader(csv_file, delimiter=',')
     print(readcsv)
-    
     data = []
-
     print("\nThe given training examples are:") 
     for row in readcsv:     
-        print(row)
+        #print(row)
         if row[-1].upper() == "YES":
             data.append(row)
             
@@ -22,24 +20,10 @@ hypo = data[0][:-1]
 print(hypo)
 for i in range(len(data)):    
     for k in range(len(hypo)):
-        if hypo[k]!=data[i][k]:
+        if hypo[k].upper()!=data[i][k].upper():
             hypo[k]='?';
     print(hypo);
-i=i+1;
-
-
 print("\nThe maximally specific Find-s hypothesis for the given training examples is");
-list=[];
-for i in range(len(hypo)):
-    list.append(hypo[i]);
-print(list);
-
-
-
-
-
-
-
-
+print(hypo);
 
 

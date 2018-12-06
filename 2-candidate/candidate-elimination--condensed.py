@@ -41,5 +41,5 @@ for i in indices:
     # remove those rows from generalHypo
     generalHypo.remove(['?', '?', '?', '?', '?', '?'])
 
-print("Final specificHypo:", specificHypo, sep="\n")
+print("Final specificHypo:", specificHypo)
 print("Final generalHypo:", generalHypo, sep="\n")

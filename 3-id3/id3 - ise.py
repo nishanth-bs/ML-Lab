@@ -1,5 +1,4 @@
-import pandas as pd
-from pandas import DataFrame 
+import pandas as pd 
 df_tennis = pd.DataFrame(data = pd.read_csv('tennis-ise.csv'))
 print("\n Given Play Tennis Data Set:\n\n",df_tennis)
 
@@ -13,25 +12,20 @@ def entropy(probs):
     return sum( [-prob*math.log(prob, 2) for prob in probs] )
 
 #Function to calulate the entropy of the given Data Sets/List with respect to target attributes
-def entropy_of_list(a_list):  
-    #print("A-list",a_list)
+def entropyOfList(a_list):  
+    #a_list --> yes/no col
     from collections import Counter
-    cnt = Counter(x for x in a_list)   # Counter calculates the propotion of class
-   # print("\nClasses:",cnt)
-    #print("No and Yes Classes:",a_list.name,cnt)
+    cnt = Counter(x for x in a_list)
     num_instances = len(a_list)*1.0   # = 14
-    print("\n Number of Instances of the Current Sub Class is {0}:".format(num_instances ))
     probs = [x / num_instances for x in cnt.values()]  # x means no of YES/NO
-    print("\n Classes:",min(cnt),max(cnt))
+    print("\n Classes:",min(cnt),max(cnt)) #min(cnt)--> Yes/no
     print(" \n Probabilities of Class {0} is {1}:".format(min(cnt),min(probs)))
     print(" \n Probabilities of Class {0} is {1}:".format(max(cnt),max(probs)))
-    return entropy(probs) # Call Entropy :
+    return entropy(probs) 
     
 # The initial entropy of the YES/NO attribute for our dataset.
 print("\n  INPUT DATA SET FOR ENTROPY CALCULATION:\n", df_tennis['PlayTennis'])
-
-total_entropy = entropy_of_list(df_tennis['PlayTennis'])
-
+total_entropy = entropyOfList(df_tennis['PlayTennis'])
 print("\n Total Entropy of PlayTennis Data Set:",total_entropy)
 
 def information_gain(df, split_attribute_name, target_attribute_name, trace=0):
@@ -49,9 +43,12 @@ def information_gain(df, split_attribute_name, target_attribute_name, trace=0):
     # Proportion of Obs in Each Data-Split
     nobs = len(df.index) * 1.0
     print("NOBS",nobs)
-    df_agg_ent = df_split.agg({target_attribute_name : [entropy_of_list, lambda x: len(x)/nobs] })[target_attribute_name]
+    
+    #Function to use for aggregating the data. 1st and only param : dict of column names -> functions (or list of functions).
+    #returns a DataFrame object 
+    df_agg_ent = df_split.agg({target_attribute_name : [entropyOfList, lambda x: len(x)/nobs] })[target_attribute_name]
     print([target_attribute_name])
-    print(" Entropy List ",entropy_of_list)
+    print(" Entropy List ",entropyOfList)
     print("DFAGGENT",df_agg_ent)
     df_agg_ent.columns = ['Entropy', 'PropObservations']
     if trace: # helps understand what fxn is doing:
@@ -59,7 +56,7 @@ def information_gain(df, split_attribute_name, target_attribute_name, trace=0):
     
     # Calculate Information Gain:
     new_entropy = sum( df_agg_ent['Entropy'] * df_agg_ent['PropObservations'] )
-    old_entropy = entropy_of_list(df[target_attribute_name])
+    old_entropy = entropyOfList(df[target_attribute_name])
     return old_entropy - new_entropy
 
 
@@ -67,6 +64,7 @@ print('Info-gain for Outlook is :'+str( information_gain(df_tennis, 'Outlook', '
 print('\n Info-gain for Humidity is: ' + str( information_gain(df_tennis, 'Humidity', 'PlayTennis')),"\n")
 print('\n Info-gain for Wind is:' + str( information_gain(df_tennis, 'Wind', 'PlayTennis')),"\n")
 print('\n Info-gain for Temperature is:' + str( information_gain(df_tennis, 'Temperature','PlayTennis')),"\n")
+
 def id3(df, target_attribute_name, attribute_names, default_class=None):
     
     ## Tally target attribute:

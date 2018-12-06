@@ -1,7 +1,6 @@
 import numpy as np
-from bokeh.plotting import figure, show, output_notebook
+from bokeh.plotting import figure, show
 from bokeh.layouts import gridplot
-from bokeh.io import push_notebook
 
 X = np.linspace(-3, 3, num=1000)
 print("The Data Set ( 10 Samples) X :\n",X[1:10])
