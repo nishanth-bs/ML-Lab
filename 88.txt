@@ -1,0 +1,51 @@
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+
+df = load_iris()
+X = df["data"]
+Y = df["target"]
+l1 = [0, 1, 2]
+
+
+def rename(s):
+	l2 = []
+	for i in s:
+		if i not in l2:
+			l2.append(i)
+
+	for i in range(len(s)):
+		pos = l2.index(s[i])
+		s[i] = l1[pos]
+	return s
+
+
+from sklearn.cluster import KMeans
+km_cluster = KMeans(n_clusters = 3)
+km_cluster.fit(X)
+km_predictions = km_cluster.predict(X)
+km = rename(km_predictions)
+print("KM Thought")
+print(km_predictions)
+plt.scatter(X[:, 0], X[:, 1], c = km_predictions) # Sepal length vs Sepal width (in cm)
+plt.show()
+
+from sklearn.mixture import GaussianMixture
+em_cluster = GaussianMixture(n_components = 3)
+em_cluster.fit(X)
+em_predictions = em_cluster.predict(X)
+em = rename(em_predictions)
+print("EM Thought")
+print(em_predictions)
+plt.scatter(X[:, 0], X[:, 1], c = em_predictions)
+plt.show()
+
+#Comparing their accuracies
+from sklearn.metrics import accuracy_score, confusion_matrix
+km_accuracy = accuracy_score(Y, km)
+em_accuracy = accuracy_score(Y, em)
+km_confusion = confusion_matrix(Y, km)
+em_confusion = confusion_matrix(Y, em)
+print("Accuracy of KMeans is ",km_accuracy)
+print("Accuracy of EM is ",em_accuracy)
+print("Confusion matrix of KMeans: \n", km_confusion)
+print("Confusion matrix of EM: \n", em_confusion)
